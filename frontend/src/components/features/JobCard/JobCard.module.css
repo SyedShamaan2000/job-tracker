@@ -1,0 +1,29 @@
+.card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  transition: box-shadow 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.company {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.loadingOverlay {
+  opacity: 0.5;
+  pointer-events: none;
+}
