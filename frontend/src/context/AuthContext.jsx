@@ -9,7 +9,11 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        localStorage.removeItem("user");
+      }
     }
     setLoading(false);
   }, []);
@@ -18,6 +22,8 @@ export function AuthProvider({ children }) {
     localStorage.setItem("token", userData.token);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
+    // Navigation happens automatically in App.jsx because
+    // ProtectedRoute will now evaluate 'user' as truthy
   };
 
   const logout = () => {
