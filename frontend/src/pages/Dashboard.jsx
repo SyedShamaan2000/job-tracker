@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { jobService } from "../services/api";
 import JobCard from "../components/features/JobCard/JobCard";
 import styles from "./Dashboard.module.css";
+import { useNotification } from "../context/NotificationContext";
 
 const STATUSES = ["Saved", "Applied", "Interview", "Offer", "Rejected"];
 const PRIORITIES = ["High", "Medium", "Low"];
@@ -20,7 +21,8 @@ const INITIAL_FORM_STATE = {
 };
 
 export default function Dashboard() {
-  const { jobs, isLoading, error, setJobs } = useJobs();
+  const { showToast } = useNotification();
+  const { jobs, isLoading, setJobs } = useJobs();
   const { logout, user } = useAuth();
 
   const [isActionLoading, setIsActionLoading] = useState(null);
@@ -64,6 +66,26 @@ export default function Dashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if anything actually changed during an edit
+    if (editingJobId) {
+      const originalJob = jobs.find((j) => j._id === editingJobId);
+      const isUnchanged =
+        formData.title === originalJob.title &&
+        formData.company === originalJob.company &&
+        formData.location === (originalJob.location || "") &&
+        formData.status === originalJob.status &&
+        formData.priority === originalJob.priority &&
+        formData.link === (originalJob.link || "") &&
+        formData.notes === (originalJob.notes || "");
+
+      if (isUnchanged) {
+        showToast("No changes detected", "info");
+        setIsModalOpen(false);
+        return;
+      }
+    }
+
     setIsActionLoading("submitting");
     try {
       if (editingJobId) {
@@ -73,9 +95,10 @@ export default function Dashboard() {
         const newJob = await jobService.create(formData);
         setJobs([newJob, ...jobs]);
       }
+      showToast(editingJobId ? "Job updated!" : "Job added!", "success");
       setIsModalOpen(false);
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     } finally {
       setIsActionLoading(null);
     }
@@ -87,8 +110,9 @@ export default function Dashboard() {
     try {
       await jobService.delete(id);
       setJobs(jobs.filter((j) => j._id !== id));
+      showToast("Application deleted", "success");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message || "Delete failed", "error");
     } finally {
       setIsActionLoading(null);
     }
@@ -146,6 +170,9 @@ export default function Dashboard() {
             isUpdating={isActionLoading === job._id}
           />
         ))}
+        {filteredJobs.length === 0 && !isLoading && (
+          <div className={styles.emptyState}>No applications found.</div>
+        )}
       </div>
 
       {isModalOpen && (
@@ -195,7 +222,7 @@ export default function Dashboard() {
                     onChange={(e) =>
                       setFormData({ ...formData, link: e.target.value })
                     }
-                    placeholder="URL to posting"
+                    placeholder="https://..."
                   />
                 </div>
               </div>

@@ -1,23 +1,23 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import { useNotification } from "../../../context/NotificationContext"; // Import Toast hook
 import { authService } from "../../../services/api";
 import styles from "./AuthForm.module.css";
 
 export default function AuthPage({ isLogin = true }) {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { showToast } = useNotification(); // Initialize Toast
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setIsSubmitting(true);
 
     try {
@@ -29,9 +29,14 @@ export default function AuthPage({ isLogin = true }) {
         : await authService.register(formData);
 
       login(data);
-      navigate("/"); // Redirect to dashboard immediately after login
+      showToast(
+        isLogin ? "Welcome back!" : "Account created successfully!",
+        "success",
+      );
+      navigate("/");
     } catch (err) {
-      setError(err.message || "Authentication failed");
+      // Use toast instead of local state for a cleaner UI
+      showToast(err.message || "Authentication failed", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -42,11 +47,13 @@ export default function AuthPage({ isLogin = true }) {
       <div className={styles.card}>
         <div className={styles.header}>
           <span className={styles.logo}>🎯</span>
-          <h1>{isLogin ? "Welcome Back" : "Create Account"}</h1>
-          <p>Manage your career journey effectively</p>
+          <h1 className={styles.title}>
+            {isLogin ? "Welcome Back" : "Create Account"}
+          </h1>
+          <p className={styles.subtitle}>
+            Manage your career journey effectively
+          </p>
         </div>
-
-        {error && <div className={styles.errorAlert}>{error}</div>}
 
         <form onSubmit={handleSubmit} className={styles.form}>
           {!isLogin && (
@@ -104,9 +111,9 @@ export default function AuthPage({ isLogin = true }) {
         </form>
 
         <p className={styles.footerText}>
-          {isLogin ? "New here?" : "Already have an account?"}
-          <Link to={isLogin ? "/register" : "/login"}>
-            {isLogin ? " Create an account" : " Sign in"}
+          {isLogin ? "New here? " : "Already have an account? "}
+          <Link to={isLogin ? "/register" : "/login"} className={styles.link}>
+            {isLogin ? "Create an account" : "Sign in"}
           </Link>
         </p>
       </div>
