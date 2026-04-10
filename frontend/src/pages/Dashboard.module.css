@@ -1,127 +1,90 @@
 .container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
-  background-color: #f8fafc;
-  min-height: 100vh;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem 0;
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 2rem;
+  align-items: flex-end;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.brand h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+.title {
+  font-size: 1.875rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-main);
 }
 
-.stats {
+.subtitle {
+  color: var(--text-muted);
   font-size: 0.875rem;
-  color: #64748b;
-  margin-top: 0.25rem;
 }
 
-.addBtn {
-  background: #2563eb;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 8px;
-  font-weight: 600;
+.actions {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-/* Tab/Filter Bar */
-.filterBar {
-  display: flex;
-  align-items: center;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 }
 
-.tabs {
+.searchSection {
   display: flex;
-  background: #e2e8f0;
-  padding: 0.25rem;
-  border-radius: 10px;
-  gap: 0.25rem;
-}
-
-.tab {
-  padding: 0.5rem 1.25rem;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.tabActive {
-  background: #2563eb;
-  color: white;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .searchInput {
   flex: 1;
-  padding: 0.6rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background: white;
+  min-width: 280px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Grid & Cards */
 .grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
-/* Modal Enhancements based on Screenshot */
-.priorityToggle {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.priorityOption {
-  flex: 1;
-  padding: 0.6rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+/* Modal Styling */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-weight: 500;
+  z-index: 50;
+  padding: 1rem;
 }
 
-.priorityOption.high {
-  border-color: #ef4444;
-  color: #ef4444;
-}
-.priorityOption.medium {
-  border-color: #f59e0b;
-  color: #f59e0b;
-  background: #fffbeb;
-}
-.priorityOption.low {
-  border-color: #94a3b8;
-  color: #64748b;
+.modalContent {
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  animation: slideUp 0.3s ease-out;
 }
 
-.labelPill {
-  padding: 0.25rem 0.75rem;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  color: #475569;
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
