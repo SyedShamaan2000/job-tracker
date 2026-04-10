@@ -43,6 +43,14 @@ app.use(
 // --- API Routes ---
 app.use("/api/users", userRoutes);
 app.use("/api/jobs", jobRoutes);
+// Add this above your other routes in app.js
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: "Job Tracker API is live.",
+    version: "1.0.0",
+    docs: "https://github.com/SyedShamaan2000/job-tracker"
+  })
+})
 
 // --- Fallback Handlers ---
 
@@ -81,3 +89,4 @@ process.on("unhandledRejection", (err) => {
   console.error(`Error: ${err.message}`);
   server.close(() => process.exit(1));
 });
+
