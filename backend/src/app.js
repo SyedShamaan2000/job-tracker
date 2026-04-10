@@ -22,39 +22,23 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // --- Security: CORS Configuration ---
-// Better Origin Normalization
-const rawAllowedOrigins = [
+// Strict CORS for production
+const allowedOrigins = [
   process.env.CLIENT_URL,
-  "http://localhost:5173",
+  "https://your-frontend-domain.com",
 ];
-
-// Clean the origins (remove trailing slashes and nulls)
-const allowedOrigins = rawAllowedOrigins
-  .filter(Boolean)
-  .map((origin) => origin.replace(/\/$/, ""));
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow server-to-server or tools like Postman (where origin is undefined)
-    if (!origin) return callback(null, true);
-
-    // Clean the incoming origin for comparison
-    const cleanOrigin = origin.replace(/\/$/, "");
-
-    if (allowedOrigins.includes(cleanOrigin)) {
-      callback(null, true);
-    } else {
-      console.error(`[CORS Error]: Origin ${origin} not allowed`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  optionsSuccessStatus: 200, // Some legacy browsers choke on 204
-};
-
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
 
 // --- API Routes ---
 app.use("/api/users", userRoutes);
