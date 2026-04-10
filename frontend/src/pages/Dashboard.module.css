@@ -2,89 +2,186 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 3rem 1.5rem;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  margin-bottom: 3rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .title {
-  font-size: 1.875rem;
+  font-size: 2.25rem;
   font-weight: 800;
-  letter-spacing: -0.025em;
   color: var(--text-main);
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
 }
 
 .subtitle {
+  font-size: 1rem;
   color: var(--text-muted);
-  font-size: 0.875rem;
 }
 
 .actions {
   display: flex;
   gap: 1rem;
+  align-items: center;
 }
 
-.searchSection {
+/* Search and Filters */
+.filterBar {
   display: flex;
   gap: 1rem;
+  margin-bottom: 2.5rem;
   flex-wrap: wrap;
 }
 
 .searchInput {
   flex: 1;
-  min-width: 280px;
-  padding: 0.75rem 1rem;
+  min-width: 300px;
+  padding: 0.875rem 1.25rem;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   background: var(--bg-card);
+  font-size: 1rem;
+  transition: all 0.2s ease;
   box-shadow: var(--shadow-sm);
 }
 
+.searchInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.selectFilter {
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  color: var(--text-main);
+  cursor: pointer;
+  min-width: 160px;
+}
+
+/* Grid Layout */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: 1.5rem;
+}
+
+/* Action Buttons */
+.addBtn {
+  background: var(--primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addBtn:hover {
+  background: var(--primary-hover);
+}
+
+.logoutBtn {
+  padding: 0.75rem 1.25rem;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
 }
 
 /* Modal Styling */
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
-  padding: 1rem;
+  z-index: 100;
+  padding: 1.5rem;
 }
 
 .modalContent {
   background: var(--bg-card);
   width: 100%;
-  max-width: 500px;
-  padding: 2rem;
+  max-width: 550px;
+  padding: 2.5rem;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
-  animation: slideUp 0.3s ease-out;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: modalAppear 0.3s ease-out;
 }
 
-@keyframes slideUp {
+@keyframes modalAppear {
   from {
-    transform: translateY(10px);
     opacity: 0;
+    transform: scale(0.95) translateY(10px);
   }
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: scale(1) translateY(0);
   }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.cancelBtn {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.saveBtn {
+  background: var(--primary);
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
 }
