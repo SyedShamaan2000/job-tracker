@@ -8,7 +8,7 @@ const STATUS_COLORS = {
   Rejected: styles.statusRejected,
 };
 
-export default function JobCard({ job, onDelete, isUpdating }) {
+export default function JobCard({ job, onDelete, onEdit, isUpdating }) {
   return (
     <div className={`${styles.card} ${isUpdating ? styles.loading : ""}`}>
       <div className={styles.info}>
@@ -17,31 +17,36 @@ export default function JobCard({ job, onDelete, isUpdating }) {
           <span className={`${styles.badge} ${STATUS_COLORS[job.status]}`}>
             {job.status}
           </span>
-          <span className={styles.priorityLabel}>
-            {job.priority === "High"
-              ? "🔴"
-              : job.priority === "Medium"
-                ? "🟡"
-                : "⚪"}{" "}
-            {job.priority}
-          </span>
         </div>
         <p className={styles.company}>
           {job.company} • {job.location || "Remote"}
         </p>
+        <span className={styles.priorityLabel}>
+          {job.priority === "High"
+            ? "🔴"
+            : job.priority === "Medium"
+              ? "🟡"
+              : "⚪"}{" "}
+          {job.priority}
+        </span>
         {job.notes && <p className={styles.notesExcerpt}>{job.notes}</p>}
       </div>
       <div className={styles.controls}>
-        {job.link && (
-          <a
-            href={job.link}
-            target="_blank"
-            rel="noreferrer"
-            className={styles.linkIcon}
-          >
-            🔗
-          </a>
-        )}
+        <div className={styles.leftActions}>
+          {job.link && (
+            <a
+              href={job.link}
+              target="_blank"
+              rel="noreferrer"
+              className={styles.linkIcon}
+            >
+              🔗
+            </a>
+          )}
+          <button onClick={onEdit} className={styles.editBtn}>
+            ✏️
+          </button>
+        </div>
         <button
           disabled={isUpdating}
           onClick={() => onDelete(job._id)}

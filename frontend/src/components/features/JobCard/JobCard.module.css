@@ -136,3 +136,31 @@
   opacity: 0.6;
   pointer-events: none;
 }
+
+.controls {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.leftActions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.editBtn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.editBtn:hover {
+  opacity: 1;
+}
