@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
         setUser(JSON.parse(savedUser));
       } catch (error) {
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
       }
     }
     setLoading(false);
@@ -22,8 +23,6 @@ export function AuthProvider({ children }) {
     localStorage.setItem("token", userData.token);
     localStorage.setItem("user", JSON.stringify(userData));
     setUser(userData);
-    // Navigation happens automatically in App.jsx because
-    // ProtectedRoute will now evaluate 'user' as truthy
   };
 
   const logout = () => {
@@ -34,7 +33,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 }

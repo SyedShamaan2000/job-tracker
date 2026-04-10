@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { authService } from "../../../services/api";
 import styles from "./AuthForm.module.css";
 
 export default function AuthPage({ isLogin = true }) {
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -12,7 +14,6 @@ export default function AuthPage({ isLogin = true }) {
   });
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,82 +29,84 @@ export default function AuthPage({ isLogin = true }) {
         : await authService.register(formData);
 
       login(data);
+      navigate("/"); // Redirect to dashboard immediately after login
     } catch (err) {
-      setError(
-        err?.response?.data?.message || err.message || "An error occurred",
-      );
+      setError(err.message || "Authentication failed");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className={styles.container}>
-      <h2 className="text-2xl font-bold mb-6">
-        {isLogin ? "Welcome Back" : "Create Account"}
-      </h2>
+    <div className={styles.authContainer}>
+      <div className={styles.card}>
+        <div className={styles.header}>
+          <span className={styles.logo}>🎯</span>
+          <h1>{isLogin ? "Welcome Back" : "Create Account"}</h1>
+          <p>Manage your career journey effectively</p>
+        </div>
 
-      {error && <div className={styles.error}>{error}</div>}
+        {error && <div className={styles.errorAlert}>{error}</div>}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {!isLogin && (
+        <form onSubmit={handleSubmit} className={styles.form}>
+          {!isLogin && (
+            <div className={styles.inputGroup}>
+              <label>Full Name</label>
+              <input
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                placeholder="John Doe"
+              />
+            </div>
+          )}
+
           <div className={styles.inputGroup}>
-            <label>Full Name</label>
+            <label>Email</label>
             <input
-              className={styles.input}
-              type="text"
+              type="email"
               required
-              value={formData.name}
+              value={formData.email}
               onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
+                setFormData({ ...formData, email: e.target.value })
               }
-              placeholder="John Doe"
+              placeholder="name@company.com"
             />
           </div>
-        )}
 
-        <div className={styles.inputGroup}>
-          <label>Email</label>
-          <input
-            className={styles.input}
-            type="email"
-            required
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            placeholder="name@company.com"
-          />
-        </div>
+          <div className={styles.inputGroup}>
+            <label>Password</label>
+            <input
+              type="password"
+              required
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              placeholder="••••••••"
+            />
+          </div>
 
-        <div className={styles.inputGroup}>
-          <label>Password</label>
-          <input
-            className={styles.input}
-            type="password"
-            required
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-            placeholder="••••••••"
-          />
-        </div>
-
-        <button type="submit" className={styles.button} disabled={isSubmitting}>
-          {isSubmitting ? "Processing..." : isLogin ? "Login" : "Sign Up"}
-        </button>
-      </form>
-
-      {/* Toggle Link Section */}
-      <div className="mt-6 text-center text-sm">
-        <p className="text-gray-600">
-          {isLogin ? "Don't have an account?" : "Already have an account?"}
-          <Link
-            to={isLogin ? "/register" : "/login"}
-            className="ml-2 font-semibold text-primary hover:underline"
+          <button
+            type="submit"
+            className={styles.submitBtn}
+            disabled={isSubmitting}
           >
-            {isLogin ? "Sign up" : "Log in"}
+            {isSubmitting
+              ? "Please wait..."
+              : isLogin
+                ? "Sign In"
+                : "Get Started"}
+          </button>
+        </form>
+
+        <p className={styles.footerText}>
+          {isLogin ? "New here?" : "Already have an account?"}
+          <Link to={isLogin ? "/register" : "/login"}>
+            {isLogin ? " Create an account" : " Sign in"}
           </Link>
         </p>
       </div>
