@@ -1,27 +1,42 @@
-name: CI/CD Pipeline
+name: Manual Deployment
 
 on:
-  push:
-    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "What to deploy?"
+        required: true
+        default: "both"
+        type: choice
+        options:
+          - backend
+          - frontend
+          - both
 
 jobs:
-  build-and-test:
+  deploy-backend:
+    if: ${{ github.event.inputs.target == 'backend' || github.event.inputs.target == 'both' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deploy
+        run: |
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "Error: RENDER_DEPLOY_HOOK secret is missing."
+            exit 1
+          fi
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+
+  deploy-frontend:
+    if: ${{ github.event.inputs.target == 'frontend' || github.event.inputs.target == 'both' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
-      - name: Install Backend Deps & Lint
-        run: |
-          cd backend
-          npm install
-          # npm test (Add tests later)
-
-      - name: Build Frontend
+      - name: Build and Deploy to Vercel
         run: |
           cd frontend
           npm install
@@ -29,9 +44,6 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
-  deploy-backend:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Render
-        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
+      # Note: Vercel usually handles its own deployment via its GitHub Integration.
+      # If you want GitHub Actions to push to Vercel manually,
+      # you would use the 'amondnet/vercel-action' here.
