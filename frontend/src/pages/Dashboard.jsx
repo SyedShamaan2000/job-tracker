@@ -125,7 +125,7 @@ export default function Dashboard() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.brand}>
-          <h1 className={styles.title}>Career Track</h1>
+          <h1 className={styles.title}>Job Tracker</h1>
           <p className={styles.subtitle}>Welcome back, {user?.name}</p>
         </div>
         <div className={styles.actions}>
