@@ -160,6 +160,14 @@
   letter-spacing: 0.05em;
 }
 
+.field input,
+.field textarea,
+.field select {
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+}
+
 .modalActions {
   display: flex;
   justify-content: flex-end;
